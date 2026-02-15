@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { TokenData, FilterState, SortField, DEFAULT_FILTERS } from '@/lib/types';
+import { computeAlgoScore } from '@/lib/algo';
 import Header from './Header';
 import StatsBar from './StatsBar';
 import FilterPanel from './FilterPanel';
@@ -47,12 +48,19 @@ export default function Screener() {
     return () => clearInterval(interval);
   }, [fetchTokens]);
 
+  // Compute algo scores for all tokens
+  const scoredTokens = useMemo(() => {
+    return tokens.map((token) => ({
+      ...token,
+      algoScore: computeAlgoScore(token),
+    }));
+  }, [tokens]);
+
   // Apply filters
   const filteredTokens = useMemo(() => {
-    const now = Date.now();
     const msPerDay = 86_400_000;
 
-    return tokens.filter((token) => {
+    return scoredTokens.filter((token) => {
       const ageDays = token.ageMs / msPerDay;
       const mcap = token.marketCap || 0;
       const liq = token.liquidity?.usd || 0;
@@ -109,7 +117,7 @@ export default function Screener() {
 
       return true;
     });
-  }, [tokens, filters]);
+  }, [scoredTokens, filters]);
 
   // Sort tokens
   const sortedTokens = useMemo(() => {
@@ -121,6 +129,10 @@ export default function Screener() {
       let bVal = 0;
 
       switch (filters.sortBy) {
+        case 'score':
+          aVal = a.algoScore?.total || 0;
+          bVal = b.algoScore?.total || 0;
+          break;
         case 'marketCap':
           aVal = a.marketCap || 0;
           bVal = b.marketCap || 0;
@@ -190,7 +202,7 @@ export default function Screener() {
       <FilterPanel
         filters={filters}
         onFiltersChange={setFilters}
-        totalCount={tokens.length}
+        totalCount={scoredTokens.length}
         filteredCount={sortedTokens.length}
       />
       <TokenTable

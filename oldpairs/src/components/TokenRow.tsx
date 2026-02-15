@@ -3,6 +3,7 @@
 import { TokenData } from '@/lib/types';
 import { formatPrice, formatUsd, formatPercent, formatNumber, truncateAddress, getDexName } from '@/lib/format';
 import { generateSparkline } from '@/lib/api';
+import { getGradeColor, getScoreColor } from '@/lib/algo';
 import Sparkline from './Sparkline';
 
 interface TokenRowProps {
@@ -104,6 +105,32 @@ export default function TokenRow({ token, index, onSelect }: TokenRowProps) {
       {/* Rank */}
       <td className="px-3 py-2.5 text-xs text-[var(--muted)] num w-10">
         {index + 1}
+      </td>
+
+      {/* Algo Score */}
+      <td className="px-3 py-2.5 text-center">
+        {token.algoScore ? (
+          <div className="flex flex-col items-center gap-0.5">
+            <div
+              className="inline-flex items-center justify-center w-10 h-5 rounded-full text-[10px] font-bold num"
+              style={{
+                backgroundColor: `${getScoreColor(token.algoScore.total)}15`,
+                color: getScoreColor(token.algoScore.total),
+                border: `1px solid ${getScoreColor(token.algoScore.total)}30`,
+              }}
+            >
+              {token.algoScore.total}
+            </div>
+            <span
+              className="text-[9px] font-bold"
+              style={{ color: getGradeColor(token.algoScore.grade) }}
+            >
+              {token.algoScore.grade}
+            </span>
+          </div>
+        ) : (
+          <span className="text-[var(--muted)] text-xs">-</span>
+        )}
       </td>
 
       {/* Token info */}

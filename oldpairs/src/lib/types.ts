@@ -53,6 +53,8 @@ export interface TokenPair {
   };
 }
 
+import type { AlgoScore } from './algo';
+
 export interface TokenData extends TokenPair {
   ageMs: number;
   ageFormatted: string;
@@ -60,6 +62,7 @@ export interface TokenData extends TokenPair {
   topHoldersPercent?: number;
   devHoldingPercent?: number;
   sparklineData?: number[];
+  algoScore?: AlgoScore;
 }
 
 export interface FilterState {
@@ -84,6 +87,7 @@ export interface FilterState {
 }
 
 export type SortField =
+  | 'score'
   | 'marketCap'
   | 'liquidity'
   | 'volume24h'
@@ -115,7 +119,7 @@ export const DEFAULT_FILTERS: FilterState = {
   hasSocials: false,
   hasWebsite: false,
   dex: 'all',
-  sortBy: 'volume24h',
+  sortBy: 'score',
   sortDir: 'desc',
   search: '',
 };
@@ -130,6 +134,17 @@ export interface PresetFilter {
 }
 
 export const PRESET_FILTERS: PresetFilter[] = [
+  {
+    name: 'Algo Picks',
+    description: 'Top scoring tokens ranked by the composite algorithm',
+    icon: '🧠',
+    filters: {
+      minAge: 3,
+      minLiquidity: 5000,
+      sortBy: 'score',
+      sortDir: 'desc',
+    },
+  },
   {
     name: 'OG Gems',
     description: 'Established tokens 30+ days old with strong liquidity',

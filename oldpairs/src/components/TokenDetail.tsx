@@ -3,6 +3,7 @@
 import { TokenData } from '@/lib/types';
 import { formatPrice, formatUsd, formatPercent, formatNumber, formatDateFull, truncateAddress, getDexName } from '@/lib/format';
 import { generateSparkline } from '@/lib/api';
+import { getGradeColor, getScoreColor, SCORE_LABELS, SCORE_WEIGHTS_DISPLAY, type AlgoScore } from '@/lib/algo';
 import Sparkline from './Sparkline';
 
 interface TokenDetailProps {
@@ -125,6 +126,82 @@ export default function TokenDetail({ token, onClose }: TokenDetailProps) {
             <StatCard label="24h TXNs" value={formatNumber(txns24h, 0)} />
             <StatCard label="FDV" value={formatUsd(token.fdv || 0)} />
           </div>
+
+          {/* Algo Score Breakdown */}
+          {token.algoScore && (
+            <div>
+              <h3 className="text-xs font-semibold text-[var(--muted-light)] uppercase tracking-wider mb-2">
+                Algo Score
+              </h3>
+              <div className="bg-[var(--surface)] rounded-lg border border-[var(--border)] p-3 space-y-3">
+                {/* Total score header */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div
+                      className="w-10 h-10 rounded-lg flex items-center justify-center text-lg font-bold num"
+                      style={{
+                        backgroundColor: `${getScoreColor(token.algoScore.total)}15`,
+                        color: getScoreColor(token.algoScore.total),
+                        border: `1px solid ${getScoreColor(token.algoScore.total)}30`,
+                      }}
+                    >
+                      {token.algoScore.total}
+                    </div>
+                    <div>
+                      <div className="text-sm font-semibold">
+                        Grade{' '}
+                        <span style={{ color: getGradeColor(token.algoScore.grade) }}>
+                          {token.algoScore.grade}
+                        </span>
+                      </div>
+                      <div className="text-[10px] text-[var(--muted)]">Composite Score</div>
+                    </div>
+                  </div>
+                  {/* Score bar */}
+                  <div className="w-24 h-2 rounded-full bg-[var(--border)] overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all"
+                      style={{
+                        width: `${token.algoScore.total}%`,
+                        backgroundColor: getScoreColor(token.algoScore.total),
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Sub-scores */}
+                <div className="space-y-1.5 pt-1 border-t border-[var(--border)]">
+                  {(Object.keys(SCORE_LABELS) as Array<keyof typeof SCORE_LABELS>).map((key) => {
+                    const value = token.algoScore![key as keyof AlgoScore] as number;
+                    const weight = SCORE_WEIGHTS_DISPLAY[key];
+                    return (
+                      <div key={key} className="flex items-center gap-2">
+                        <span className="text-[10px] text-[var(--muted-light)] w-28 shrink-0">
+                          {SCORE_LABELS[key]}
+                          <span className="text-[var(--muted)] ml-1">({weight}%)</span>
+                        </span>
+                        <div className="flex-1 h-1.5 rounded-full bg-[var(--border)] overflow-hidden">
+                          <div
+                            className="h-full rounded-full transition-all"
+                            style={{
+                              width: `${value}%`,
+                              backgroundColor: getScoreColor(value),
+                            }}
+                          />
+                        </div>
+                        <span
+                          className="num text-[10px] font-semibold w-7 text-right"
+                          style={{ color: getScoreColor(value) }}
+                        >
+                          {value}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Price changes */}
           <div>

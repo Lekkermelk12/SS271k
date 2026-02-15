@@ -21,6 +21,7 @@ interface ColumnDef {
 
 const COLUMNS: ColumnDef[] = [
   { label: '#', field: null, align: 'left', width: 'w-10' },
+  { label: 'Score', field: 'score', align: 'center' },
   { label: 'Token', field: null, align: 'left' },
   { label: 'Price', field: 'price', align: 'right' },
   { label: 'Age', field: 'age', align: 'right' },
@@ -48,6 +49,7 @@ function SkeletonRow({ index }: { index: number }) {
   return (
     <tr className="border-b border-[var(--border)]/30">
       <td className="px-3 py-3"><div className="skeleton h-3 w-4" /></td>
+      <td className="px-3 py-3"><div className="skeleton h-5 w-10 mx-auto rounded-full" /></td>
       <td className="px-3 py-3">
         <div className="flex items-center gap-2.5">
           <div className="skeleton w-7 h-7 rounded-full" />
