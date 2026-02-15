@@ -1,0 +1,215 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0b0b10;
+  --foreground: #e2e2ea;
+  --surface: #12121a;
+  --surface-hover: #1a1a26;
+  --surface-active: #222230;
+  --border: #2a2a3a;
+  --border-light: #3a3a4a;
+  --green: #00e676;
+  --green-dim: #00c853;
+  --green-bg: rgba(0, 230, 118, 0.08);
+  --red: #ff4444;
+  --red-dim: #d32f2f;
+  --red-bg: rgba(255, 68, 68, 0.08);
+  --accent: #6c5ce7;
+  --accent-light: #a29bfe;
+  --cyan: #00d2ff;
+  --yellow: #ffd600;
+  --muted: #6b6b80;
+  --muted-light: #8888a0;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-active: var(--surface-active);
+  --color-border: var(--border);
+  --color-border-light: var(--border-light);
+  --color-green: var(--green);
+  --color-green-dim: var(--green-dim);
+  --color-green-bg: var(--green-bg);
+  --color-red: var(--red);
+  --color-red-dim: var(--red-dim);
+  --color-red-bg: var(--red-bg);
+  --color-accent: var(--accent);
+  --color-accent-light: var(--accent-light);
+  --color-cyan: var(--cyan);
+  --color-yellow: var(--yellow);
+  --color-muted: var(--muted);
+  --color-muted-light: var(--muted-light);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--border-light);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  overflow: hidden;
+}
+
+/* Number formatting - monospaced for alignment */
+.num {
+  font-family: var(--font-mono), 'JetBrains Mono', 'Fira Code', monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Pulse animation for live indicator */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* Glow effects */
+.glow-green {
+  text-shadow: 0 0 8px rgba(0, 230, 118, 0.4);
+}
+
+.glow-red {
+  text-shadow: 0 0 8px rgba(255, 68, 68, 0.4);
+}
+
+/* Sparkline container */
+.sparkline-container {
+  display: flex;
+  align-items: center;
+  height: 30px;
+}
+
+/* Row hover effect */
+.token-row {
+  transition: background-color 0.15s ease;
+}
+
+.token-row:hover {
+  background-color: var(--surface-hover);
+}
+
+/* Filter panel animations */
+.filter-slide {
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+/* Tooltip */
+.tooltip-trigger:hover .tooltip-content {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Loading skeleton */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--surface) 25%, var(--surface-hover) 50%, var(--surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 4px;
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+/* Sorting indicator */
+.sort-active {
+  color: var(--cyan);
+}
+
+/* Badge styles */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Mini chart hover */
+.mini-chart:hover {
+  transform: scaleY(1.2);
+  transition: transform 0.2s ease;
+}
+
+/* Custom input styles */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Range slider */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
